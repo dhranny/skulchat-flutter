@@ -5,7 +5,9 @@ import 'package:web_socket_channel/io.dart';
 import 'dart:convert';
 import '../models/userModel.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 
+String path = 'https://b46e-196-220-145-135.ngrok-free.app';
 String? token;
 Iterable<Course>? courses;
 
@@ -17,7 +19,7 @@ Future<http.Response> fetchAlbum() {
 
 Future<bool> register(User user) async {
   final response = await http
-      .post(Uri.parse('https://82bd-102-89-47-26.ngrok-free.app/login'),
+      .post(Uri.parse(path + '/register'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(user.toJson())
       );
@@ -31,7 +33,7 @@ Future<bool> register(User user) async {
 
 Future<bool> login(User user) async {
   final response = await http
-      .post(Uri.parse('https://82bd-102-89-47-26.ngrok-free.app/login'),
+      .post(Uri.parse(path + '/login'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(user.toJson())
   );
@@ -41,13 +43,14 @@ Future<bool> login(User user) async {
     print("fsf" + token!);
     return true;
   } else {
+    Loader.hide();
     throw Exception('Failed to login');
   }
 }
 
 Future<bool> getCourses() async {
   final response = await http
-      .get(Uri.parse('https://82bd-102-89-47-26.ngrok-free.app/course'),
+      .get(Uri.parse(path),
       headers: {"Content-Type": "application/json", "Authorization": "Bearer " + token!},
   );
 
@@ -62,11 +65,12 @@ Future<bool> getCourses() async {
 
 WebSocketChannel? channel;
 
-void connect(){
+void connect() async{
   channel = IOWebSocketChannel.connect(
-      'https://82bd-102-89-47-26.ngrok-free.app/course',
-       headers: {"Content-Type": "application/json", "Authorization": "Bearer " + token!}
+      'ws://4.tcp.eu.ngrok.io:18965/websocket',
+      headers: {"Content-Type": "application/json", "Authorization": "Bearer " + token!}
   );
+
   channel!.stream.listen((event) {
     MessageManager.messMngr.addMessage(event);
   });

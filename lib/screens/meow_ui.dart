@@ -99,10 +99,12 @@ class LoginUiState extends State<LoginUi>{
                       Navigator.pushNamed(context, '/course')
                     }
                     else{
+                      Loader.hide(),
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login Failed')))
                     }})
                 }
                 else{
+                  Loader.hide(),
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login Failed')))
                 }
               });
