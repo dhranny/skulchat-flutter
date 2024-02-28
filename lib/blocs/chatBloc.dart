@@ -12,8 +12,7 @@ class MessageManager extends ChangeNotifier{
 
   int get messageCount => messageList.length;
 
-  void addMessage(){
-    messageList.add(new MessModel('message', false));
-    notifyListeners();
+  void addMessage(String message){
+    messageList.add(new MessModel(message, false));
   }
 }
